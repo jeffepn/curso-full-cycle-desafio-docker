@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   nginx:
@@ -9,8 +9,10 @@ services:
       - node-network
     ports:
       - "8080:80"
+    depends_on:
+      - app
   app:
-    build: 
+    build:
       context: node
     container_name: app
     networks:
@@ -18,6 +20,8 @@ services:
     volumes:
       - ./node:/usr/scr/app
     tty: true
+    depends_on:
+      - db
   db:
     image: mysql:5.7
     command: --innodb-use-native-aio=0
@@ -31,7 +35,7 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     networks:
       - node-network
-    
+
 networks:
   node-network:
     driver: bridge
