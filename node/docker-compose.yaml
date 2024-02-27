@@ -9,19 +9,16 @@ services:
       - node-network
     ports:
       - "8080:80"
-    depends_on:
-      - app
   app:
     build:
       context: node
     container_name: app
+    entrypoint: /usr/local/bin/dockerize -wait tcp://db:3306 -timeout 60s node index.js
     networks:
       - node-network
     volumes:
       - ./node:/usr/scr/app
     tty: true
-    depends_on:
-      - db
   db:
     image: mysql:5.7
     command: --innodb-use-native-aio=0
